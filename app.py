@@ -16,10 +16,10 @@ class User(db.Model):
 class Question(db.Model):
     id=db.Column(db.Integer(), primary_key=True)
     question = db.Column(db.String(1024), nullable=False, unique=True)
-    option_1 = db.Column(db.String(30), nullable=False, unique=False)
-    option_2 = db.Column(db.String(30), nullable=False, unique=False)
-    option_3 = db.Column(db.String(30), nullable=False, unique=False)
-    option_4 = db.Column(db.String(30), nullable=False, unique=False)
+    option_1 = db.Column(db.String(1024), nullable=False, unique=False)
+    option_2 = db.Column(db.String(1024), nullable=False, unique=False)
+    option_3 = db.Column(db.String(1024), nullable=False, unique=False)
+    option_4 = db.Column(db.String(1024), nullable=False, unique=False)
     answer   = db.Column(db.Integer(),nullable=False,unique=False)
 #question=[]
 @app.route('/')

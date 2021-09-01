@@ -33,7 +33,6 @@ def index():
     return render_template('login.html')
 @app.route('/quest',methods=["GET","POST"])
 def quest():
-    
     if request.method=="POST":
         session["name"] = request.form.get("username")
         session["email"] = request.form.get("email")
@@ -43,9 +42,7 @@ def quest():
         question = []
         for q in all_q:
             question.append(q)
-        print(question)
-
-        
+        #print(question)
         total = 5
         question = random.sample(question, total)
 
@@ -66,8 +63,8 @@ def quest():
 @app.route('/questions',methods=["GET","POST"])
 def generated_question():
     question = session["questionsa"]
-    #if session['complete']:
-    #    return redirect('/',code="302")
+    if session['complete']:
+        return redirect('/',code="302")
     #print(len(question))
     try:
         if session['flag']==0:
@@ -93,7 +90,7 @@ def generated_question():
 @app.route('/submit',methods=["GET","POST"])
 def subsubmit():
     question = session["questionsa"]
-    #session['complete']=True
+    session['complete']=True
     try:
         x=question[0]
     except:
@@ -123,7 +120,7 @@ def submit():
         db.session.commit()
         return render_template("score.html",name=session["name"],total=session['marks'])
     except:
-        return redirect('login',code=302)
+        return redirect('/',code=302)
 @app.route('/admin')
 def adminlog():
     return render_template("adminlogin.html")
@@ -132,7 +129,7 @@ def admincheck():
     user = request.form.get("username")
     pswd = request.form.get("pswd")
     if user=="walkover" and pswd=="walkover":
-        session["access"]=1;
+        session["access"]=1
         return redirect('/admin-surprise',code=302)
     return "<h1>Access Denied</h1>"
 @app.route('/admin-surprise')

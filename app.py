@@ -1,10 +1,10 @@
-from flask import Flask, render_template,session,request,redirect,url_for
+from flask import Flask, render_template,session,request,redirect,url_for,make_response
 from flask_sqlalchemy import SQLAlchemy
 import random
 import datetime
 import os
 app= Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']=os.environ.get('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI']=os.environ.get("DATABASE_URL")
 app.config['SECRET_KEY']='1x25d1d63s4ddnant'
 db=SQLAlchemy(app)
 class User(db.Model):
@@ -23,7 +23,7 @@ class Question(db.Model):
     answer   = db.Column(db.Integer(),nullable=False,unique=False)
 class Admin_log(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    ip=db.Column(db.String(100),nullable=False)
+    ip=db.Column(db.String(20),nullable=False)
 #question=[]
 @app.route('/')
 @app.route('/login')
@@ -129,37 +129,33 @@ def submit():
 def adminlog():
     x = Admin_log.query.all()
     fl = 0
-    for i in x:
-        if i.ip == request.environ['REMOTE_ADDR']:
-            fl = 1
-            break
+
+    if (request.cookies.get('ip') == "bar") :
+        fl = 1
+    
     if fl:
         return redirect('/admin_check',code=302)
-    return render_template("adminlogin.html")
+    res = make_response(render_template("adminlogin.html"))  
+    res.set_cookie('ip','bar',expires=datetime.datetime.now() + datetime.timedelta(days=2))
+    return res
+    
 @app.route('/admin_check',methods=["GET","POST"])
 def admincheck():
     user = request.form.get("username")
     pswd = request.form.get("pswd")
-    x=Admin_log.query.all()
+    
     fl=0
-    for i in x:
-        if i.ip==request.environ['REMOTE_ADDR']:
-            fl=1
-            break
+
+    if (request.cookies.get('ip') == "bar") :
+        fl = 1
+    
     if (user == "walkover" and pswd == "walkover") or fl:
-        if fl==0:
-            use_ip=Admin_log()
-            use_ip.ip=str(request.environ['REMOTE_ADDR'])
-            db.session.add(use_ip)
-            db.session.commit()
-            return str(use_ip.ip)
         session["access"] = 1;
         user = User.query.all()
         user.sort(key=lambda x: x.date, reverse=True)
         mn = []
         for i in user:
             d = {}
-
             d['username'] = i.username
             d['email_address'] = i.email_address
             d['marks'] = i.marks
@@ -170,7 +166,11 @@ def admincheck():
         session['user'] = mn
         session['pages'] = 1
         session['total'] = -(-len(mn) // 5)
-
+        if fl==0:
+            use_ip=Admin_log()
+            use_ip.ip=request.environ['REMOTE_ADDR']
+            db.session.add(use_ip)
+            db.session.commit()
         #session['ip'].append(request.environ['REMOTE_ADDR'])
         #print(session['ip'])
         return redirect('/admin-surprise', code=302)
@@ -181,12 +181,10 @@ def admin():
     #print(request.environ['REMOTE_ADDR'], 'a')
     mn = request.environ['REMOTE_ADDR']
     #print(mn, session['ip'])
-    x = Admin_log.query.all()
+    
     fl = 0
-    for i in x:
-        if i.ip == request.environ['REMOTE_ADDR']:
-            fl = 1
-            break
+    if (request.cookies.get('ip') == "bar") :
+        fl = 1
     if (fl):
         session['access'] = 1
     else:

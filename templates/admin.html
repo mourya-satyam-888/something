@@ -39,13 +39,14 @@
 
             function test()
             {
-                document.getElementById("next").href="/admin-surprise?option="+1;
+                var pge={page};
+                document.getElementById("next").href="/admin-surprise?option="+1+"&page="+pge;
             }
             
             function test_2()
             {
-                
-                document.getElementById("next").href="/admin-surprise?option="+2;
+                var pge={page};
+                document.getElementById("next").href="/admin-surprise?option="+2+"&page="+pge;
             }
         </script>
 
@@ -98,7 +99,6 @@
             <form method="post">
                 
                 <a href="/admin-surprise?option=1" id="next" class="submitBtn" type="button">Next</a>
-                
             </form>
         
         {% endif %}

@@ -173,8 +173,10 @@ def admin():
         d['marks'] = i.marks
         d['date'] = i.date
         mn.append(d)
-    user= mn
-    session['pages'] = 1
+    try:
+        session['pages'] = int(request.args.get("page"))
+    except:
+        session["page"]=1
     session['total'] = -(-len(mn) // 5)
     fl = 0
     if (request.cookies.get('ip') == "bar") :
@@ -205,6 +207,6 @@ def admin():
     if (page == session['total']):
         flag = 0
     # print(user)
-    return render_template("admin.html", user=user[5 * (page - 1):5 * page], flag=flag, flag1=flag1, page=1)
+    return render_template("admin.html", user=mn[5 * (page - 1):5 * page], flag=flag, flag1=flag1, page=page)
 if __name__=="__main__":
     app.run(debug=False)

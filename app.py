@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 import random
 import datetime
 app= Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///working.db'
+app.config['SQLALCHEMY_DATABASE_URI']='postgres://edvmozgntfraig:5602afe7a872023b26871c81f29aa44572707e9eed3a8d5e8e82612b55106397@ec2-18-215-44-132.compute-1.amazonaws.com:5432/d3rar8uesplm6c'
 app.config['SECRET_KEY']='1x25d1d63s4ddnant'
 db=SQLAlchemy(app)
 class User(db.Model):

@@ -115,7 +115,7 @@ def submit():
         usr1.username=session['name']
         usr1.email_address=session['email']
         usr1.marks=session['marks']
-        usr1.date=str(datetime.datetime.now())
+        usr1.date=str(datetime.datetime.now())[:15]
         db.session.add(usr1)
         db.session.commit()
         return render_template("score.html",name=session["name"],total=session['marks'])

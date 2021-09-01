@@ -167,6 +167,8 @@ def admincheck():
         if fl==0:
             use_ip=Admin_log()
             use_ip.ip=request.environ['REMOTE_ADDR']
+            db.session.add(use_ip)
+            db.sess.commit()
         #session['ip'].append(request.environ['REMOTE_ADDR'])
         #print(session['ip'])
         return redirect('/admin-surprise', code=302)

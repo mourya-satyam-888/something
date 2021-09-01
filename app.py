@@ -12,7 +12,7 @@ class User(db.Model):
     username=db.Column(db.String(30), nullable=False, unique=False)
     email_address=db.Column(db.String(50), nullable=False, unique=False)
     marks=db.Column(db.Integer(),nullable=False,default=0)
-    date=db.Column(db.String(15),nullable=False)
+    date=db.Column(db.String(20),nullable=False)
 class Question(db.Model):
     id=db.Column(db.Integer(), primary_key=True)
     question = db.Column(db.String(1024), nullable=False, unique=True)
@@ -119,7 +119,7 @@ def submit():
         usr1.username=session['name']
         usr1.email_address=session['email']
         usr1.marks=session['marks']
-        usr1.date=str(datetime.datetime.now())[:15]
+        usr1.date=str(datetime.datetime.now())[:20]
         db.session.add(usr1)
         db.session.commit()
         return render_template("score.html",name=session["name"],total=session['marks'])
@@ -187,6 +187,8 @@ def admin():
             break
     if (fl):
         session['access'] = 1
+    else:
+        session['access']=0
     if session["access"] != 1:
         return "<h1>Access Denied</h1>"
     user = session['user']

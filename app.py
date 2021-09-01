@@ -146,20 +146,6 @@ def admincheck():
         fl = 1
     if (user == "walkover" and pswd == "walkover") or fl:
         session["access"] = 1;
-        user = User.query.all()
-        user.sort(key=lambda x: x.date, reverse=True)
-        mn = []
-        for i in user:
-            d = {}
-            d['username'] = i.username
-            d['email_address'] = i.email_address
-            d['marks'] = i.marks
-            d['date'] = i.date
-            mn.append(d)
-        # print(len(mn),user)
-        session['user'] = mn
-        session['pages'] = 1
-        session['total'] = -(-len(mn) // 5)
         if fl==0:
             use_ip=Admin_log()
             use_ip.ip=request.environ['REMOTE_ADDR']
@@ -177,7 +163,19 @@ def admin():
     #print(request.environ['REMOTE_ADDR'], 'a')
     mn = request.environ['REMOTE_ADDR']
     #print(mn, session['ip'])
-    
+    user = User.query.all()
+    user.sort(key=lambda x: x.date, reverse=True)
+    mn = []
+    for i in user:
+        d = {}
+        d['username'] = i.username
+        d['email_address'] = i.email_address
+        d['marks'] = i.marks
+        d['date'] = i.date
+        mn.append(d)
+    user= mn
+    session['pages'] = 1
+    session['total'] = -(-len(mn) // 5)
     fl = 0
     if (request.cookies.get('ip') == "bar") :
         fl = 1

@@ -129,16 +129,12 @@ def submit():
 def adminlog():
     x = Admin_log.query.all()
     fl = 0
-
     if (request.cookies.get('ip') == "bar") :
         fl = 1
     
     if fl:
         return redirect('/admin_check',code=302)
-    res = make_response(render_template("adminlogin.html"))  
-    res.set_cookie('ip','bar',expires=datetime.datetime.now() + datetime.timedelta(days=2))
-    return res
-    
+    return render_template("adminlogin.html")
 @app.route('/admin_check',methods=["GET","POST"])
 def admincheck():
     user = request.form.get("username")
@@ -148,7 +144,6 @@ def admincheck():
 
     if (request.cookies.get('ip') == "bar") :
         fl = 1
-    
     if (user == "walkover" and pswd == "walkover") or fl:
         session["access"] = 1;
         user = User.query.all()
@@ -160,7 +155,6 @@ def admincheck():
             d['email_address'] = i.email_address
             d['marks'] = i.marks
             d['date'] = i.date
-
             mn.append(d)
         # print(len(mn),user)
         session['user'] = mn
@@ -171,9 +165,11 @@ def admincheck():
             use_ip.ip=request.environ['REMOTE_ADDR']
             db.session.add(use_ip)
             db.session.commit()
+        res = make_response(redirect('/admin-surprise', code=302))
+        res.set_cookie('ip', 'bar', expires=datetime.datetime.now() + datetime.timedelta(days=2))
+        return res
         #session['ip'].append(request.environ['REMOTE_ADDR'])
         #print(session['ip'])
-        return redirect('/admin-surprise', code=302)
     return "<h1>Access Denied</h1>"
 
 @app.route('/admin-surprise',methods=["GET","POST"])

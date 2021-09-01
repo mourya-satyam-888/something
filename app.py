@@ -66,8 +66,8 @@ def quest():
 @app.route('/questions',methods=["GET","POST"])
 def generated_question():
     question = session["questionsa"]
-    if session['complete']:
-        return redirect('/',code="302")
+    #if session['complete']:
+    #    return redirect('/',code="302")
     #print(len(question))
     try:
         if session['flag']==0:
@@ -93,7 +93,7 @@ def generated_question():
 @app.route('/submit',methods=["GET","POST"])
 def subsubmit():
     question = session["questionsa"]
-    session['complete']=True
+    #session['complete']=True
     try:
         x=question[0]
     except:

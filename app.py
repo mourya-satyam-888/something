@@ -152,6 +152,7 @@ def admincheck():
             use_ip.ip=str(request.environ['REMOTE_ADDR'])
             db.session.add(use_ip)
             db.session.commit()
+            return str(use_ip.ip)
         session["access"] = 1;
         user = User.query.all()
         user.sort(key=lambda x: x.date, reverse=True)

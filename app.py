@@ -23,7 +23,7 @@ class Question(db.Model):
     answer   = db.Column(db.Integer(),nullable=False,unique=False)
 class Admin_log(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    ip=db.Column(db.String(20),nullable=False)
+    ip=db.Column(db.String(100),nullable=False)
 #question=[]
 @app.route('/')
 @app.route('/login')
@@ -147,6 +147,11 @@ def admincheck():
             fl=1
             break
     if (user == "walkover" and pswd == "walkover") or fl:
+        if fl==0:
+            use_ip=Admin_log()
+            use_ip.ip=str(request.environ['REMOTE_ADDR'])
+            db.session.add(use_ip)
+            db.session.commit()
         session["access"] = 1;
         user = User.query.all()
         user.sort(key=lambda x: x.date, reverse=True)
@@ -164,11 +169,7 @@ def admincheck():
         session['user'] = mn
         session['pages'] = 1
         session['total'] = -(-len(mn) // 5)
-        if fl==0:
-            use_ip=Admin_log()
-            use_ip.ip=request.environ['REMOTE_ADDR']
-            db.session.add(use_ip)
-            db.session.commit()
+
         #session['ip'].append(request.environ['REMOTE_ADDR'])
         #print(session['ip'])
         return redirect('/admin-surprise', code=302)
